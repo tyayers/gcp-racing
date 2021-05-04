@@ -14,12 +14,14 @@ app.use(cors());
 var users = [];
 
 // defining an endpoint to return all ads
-app.get('/leaderboard', (req, res) => {
+app.get('/leaderboard/results', (req, res) => {
   users.sort(function(x, y) {
     return x.duration - y.duration;
   });
 
-  res.send(users);
+  res.send({
+    "results": users
+  });
 });
 
 app.post('/leaderboard/results', (req, res) => {
