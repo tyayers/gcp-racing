@@ -44,7 +44,7 @@
     <button type="button" class="nes-btn is-primary" onclick="document.getElementById('name-dialog').showModal();">
       Set name and team
     </button><br>
-    <button type="button" class="nes-btn is-primary" onclick="document.getElementById('partner_dialog').showModal();">
+    <button type="button" class="nes-btn is-primary" onclick="document.getElementById('leaderboard_dialog').showModal()">
       Show leaderboard
     </button><br>
     <button type="button" class="nes-btn is-primary" onclick="document.getElementById('partner_dialog').showModal();">
@@ -84,6 +84,17 @@
         </menu>
       </form>
     </dialog>
+    <dialog class="nes-dialog is-dark is-rounded" id="leaderboard_dialog">
+      <form method="dialog" style="font-family: 'Zen Dots', cursive; color: white;">
+        <p class="title">Sorry, we didn't have any developer capacity to create the leaderboard!</p>
+        <br>
+        <i class="nes-kirby"></i>
+        <br>
+        <menu class="dialog-menu">
+          <button class="nes-btn is-primary">Ok</button>
+        </menu>
+      </form>
+    </dialog>        
     <dialog class="nes-dialog is-dark is-rounded" id="partner_dialog">
       <form method="dialog" style="font-family: 'Zen Dots', cursive; color: white;">
         <p class="title">Register as a partner to integrate with our leaderboard.</p>
@@ -97,10 +108,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><a target="_blank" href="https://bap-emea-apigee-6-gcpracingpartnerportal.apigee.io/"><img src="images/apigee-logo.png" width="100px"/></a></td>
-                <td><a target="_blank" href="https://bap-emea-apigee-6-gcpracingpartnerportal.apigee.io/" style="color: white;">Apigee partner integration portal</a></td>
-              </tr>
               <tr>
                 <td><a target="_blank" href="https://www.appsheet.com/start/e5cf0a3c-a7e9-49a2-9871-dec76461e29d" style="color: white;"><img src="images/appsheet-logo.png" width="100px"/></a></td>
                 <td><a target="_blank" href="https://www.appsheet.com/start/e5cf0a3c-a7e9-49a2-9871-dec76461e29d" style="color: white;">AppSheet no-code leaderboard app</a></td>
@@ -817,7 +824,7 @@
     function completeLap(time, timestring) {
       document.getElementById('lap_dialog').showModal();
 
-      axios.post('https://racingservice-h7pi7igbcq-ew.a.run.app/leaderboard/results', {
+      axios.post('https://racingservice-h7pi7igbcq-ew.a.run.app/leaderboard/results/' + team, {
         user: name,
         team: team,
         duration: time,
