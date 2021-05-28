@@ -21,8 +21,70 @@ app.use(cors());
 
 var users = [];
 
-// defining an endpoint to return all ads
-app.get('/leaderboard/results/:team', async (req, res) => {
+app.get('/leaderboard/users', async (req, res) => {
+
+  var results = {
+    users: []
+  };
+
+  db.collection("gcp-racing").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshotsd
+        console.log(doc.id, " => ", doc.data());
+        var team = doc.data();
+
+        results.users = results.users.concat(team.users);
+    });
+  
+    results.users.sort(function(x, y) {
+      return x.duration - y.duration;
+    });
+
+    res.send(results);
+  });
+});
+
+
+app.get('/leaderboard/teams', async (req, res) => {
+
+  var results = {
+    teams: []
+  };
+
+  db.collection("gcp-racing").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshotsd
+        console.log(doc.id, " => ", doc.data());
+        var team = doc.data();
+
+        team.users.sort(function(x, y) {
+          return x.duration - y.duration;
+        });
+
+        var totalDuration = 0;
+        team.users.forEach(user => {
+          totalDuration += user.duration;
+        });
+
+        var newTeam = {
+          team: doc.id
+        }
+
+        if (team.users.length > 0) {
+          newTeam.fastestUser = team.users[0].user;
+          newTeam.fastestDuraction = team.users[0].duration;
+          newTeam.fastestDurationString = team.users[0].durationString;
+          newTeam.averageDuration = totalDuration / team.users.length;
+        }
+
+        results["teams"].push(newTeam);
+    });
+  
+    res.send(results);
+  });
+});
+
+app.get('/leaderboard/teams/:team', async (req, res) => {
 
   const teamRef = db.collection('gcp-racing').doc(req.params.team);
   const doc = await teamRef.get();
@@ -35,14 +97,14 @@ app.get('/leaderboard/results/:team', async (req, res) => {
     teamData.users.sort(function(x, y) {
       return x.duration - y.duration;
     });
+    var results = {};
+    results[req.params.team] = teamData.users;
 
-    res.send({
-      "results": teamData.users
-    });
-  }  
+    res.send(results);
+  }
 });
 
-app.post('/leaderboard/results/:team', async (req, res) => {
+app.post('/leaderboard/teams/:team', async (req, res) => {
 
   const teamRef = db.collection("gcp-racing").doc(req.body.team);
   const doc = await teamRef.get();

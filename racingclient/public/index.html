@@ -109,9 +109,13 @@
             </thead>
             <tbody>
               <tr>
+                <td><a target="_blank" href="https://bap-emea-apigee-6-gcpracingpartnerportal.apigee.io/" style="color: white;"><img src="images/apigee-logo.png" width="100px"/></a></td>
+                <td><a target="_blank" href="https://bap-emea-apigee-6-gcpracingpartnerportal.apigee.io/" style="color: white;">GCP>>Racing Partner Portal</a></td>
+              </tr>
+              <tr>
                 <td><a target="_blank" href="https://www.appsheet.com/start/e5cf0a3c-a7e9-49a2-9871-dec76461e29d" style="color: white;"><img src="images/appsheet-logo.png" width="100px"/></a></td>
                 <td><a target="_blank" href="https://www.appsheet.com/start/e5cf0a3c-a7e9-49a2-9871-dec76461e29d" style="color: white;">AppSheet no-code leaderboard app</a></td>
-              </tr>
+              </tr>              
             </tbody>
           </table>
         </div>
@@ -797,7 +801,15 @@
     var name = localStorage.getItem('name');
     var team = localStorage.getItem('team');
 
-    if (name == "null") 
+    const urlParams = new URLSearchParams(window.location.search);
+    var urlTeam = urlParams.get("team");
+
+    if (urlTeam) {
+      team = urlTeam;
+      document.getElementById("team_field").value = team;
+    }
+
+    if (name == "" || name == "null") 
       document.getElementById('name-dialog').showModal();
     else {
       document.getElementById("name_field").value = name;
@@ -818,13 +830,19 @@
         localStorage.setItem('team', team);
       //}
 
-      document.getElementById("music").play();
+      if (!name)
+        setTimeout(() => {
+          document.getElementById('name-dialog').showModal();
+        }, 100)
+        
+      else
+        document.getElementById("music").play();
     }
 
     function completeLap(time, timestring) {
       document.getElementById('lap_dialog').showModal();
 
-      axios.post('https://racingservice-h7pi7igbcq-ew.a.run.app/leaderboard/results/' + team, {
+      axios.post('https://api-dev.apigee-x.theapishop.com/gcp-racing/leaderboard/teams/' + team, {
         user: name,
         team: team,
         duration: time,
