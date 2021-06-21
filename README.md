@@ -1,7 +1,7 @@
 # GCP>>Racing
 This is a small web-app built to provide a racing game to gather data, and offer the data and racing results for integration through an API portal.
 
-A LIVE version of the game is deployed here: [https://gcp-racing.web.app](https://gcp-raccing.web.app).
+A LIVE version of the game is deployed here: [https://gcp-racing.web.app](https://gcp-racing.web.app).
 
 ## Deployment
 You can deploy the service as a single container by building the racingservice container, and publishing to any container host, such as Google Cloud Run.
